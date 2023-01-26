@@ -6,11 +6,18 @@
 #include <vector>
 
 
+
 namespace Ale
 {
 	enum KeyAction
 	{
 		PRESS = 0, RELEASE = 1
+	};
+
+	enum RenderingAPI
+	{
+		OPENGL,
+		DIRECTX
 	};
 
 	class Window
@@ -26,7 +33,7 @@ namespace Ale
 
 		virtual ~Window() = default;
 
-		virtual void MakeContextCurrent() = 0;
+		virtual bool MakeContextCurrent(RenderingAPI api) = 0;
 
 		virtual void PollEvents() = 0;
 		virtual void SwpBuffers() = 0;
@@ -49,6 +56,7 @@ namespace Ale
 		int m_SleepMargin = 10;
 		bool m_ShouldClose = false;
 		WindowProps* m_Props;
+		RenderingAPI m_RenderingAPI;
 
 		std::function<void(int, int)>* m_KeyCallback;
 		std::function<void(int, int)>* m_MouseMoveCallback;

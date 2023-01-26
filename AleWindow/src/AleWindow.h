@@ -19,5 +19,11 @@ namespace Ale
 
 		return WindowPtr(props);
 	}
+#ifdef _WIN64
+	DxProps* getDxPropsFromWindow(Window* windowsWindow)
+	{
+		return ((WindowsWindow*)windowsWindow)->GetDxProps();
+	}
+#endif
 
 }
