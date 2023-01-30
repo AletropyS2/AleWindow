@@ -1,4 +1,0 @@
-﻿  Application.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppCommon.targets(1096,5): error MSB6006: "link.exe" exited with code 1120.
-Application.obj : error LNK2001: unresolved external symbol "public: __cdecl Ale::WindowsWindow::WindowsWindow(struct Ale::Window::WindowProps *)" (??0WindowsWindow@Ale@@QEAA@PEAUWindowProps@Window@1@@Z)
-C:\Projects\C++\AleWindow\x64\Release\Sandbox.exe : fatal error LNK1120: 1 unresolved externals

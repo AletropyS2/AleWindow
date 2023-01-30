@@ -1,22 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="AleWindow">
+      <UniqueIdentifier>{6FE8CF62-DB52-84D9-2491-357F903A622E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="AleWindow\src">
+      <UniqueIdentifier>{064678A0-7206-F4D6-3B41-3D54A7C038B3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="AleWindow\src\Core">
+      <UniqueIdentifier>{1E1E0C06-0A02-CD5B-7362-C7AE5F65B7DD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AleWindow\src\Platform">
+      <UniqueIdentifier>{1AA9143F-06A3-3D91-EF0F-D4A1DBA8A3FD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AleWindow\src\Platform\Windows">
+      <UniqueIdentifier>{54CD5E94-40F3-28FB-2939-AEC615FE4DC7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\AleWindow\src\AleWindow.h">
+      <Filter>AleWindow\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AleWindow\src\Core\Window.h">
+      <Filter>AleWindow\src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\AleWindow\src\Platform\Windows\WindowsWindow.h">
+      <Filter>AleWindow\src\Platform\Windows</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\AleWindow\src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>AleWindow\src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Application.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

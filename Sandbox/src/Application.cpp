@@ -2,13 +2,13 @@
 
 int main()
 {
-	Ale::Window::WindowProps props = {
-		"Test", 400, 400
-	};
-	Ale::Window* window = Ale::createWindow(&props);
+	Ale::Window* window = CreateAleWindow();
+
+	window->MakeContextCurrent();
 
 	while (!window->ShouldClose())
 	{
+		window->SwapBuffers();
 		window->PollEvents();
 	}
 }

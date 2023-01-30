@@ -3,7 +3,6 @@
 #include <thread>
 #include <chrono>
 
-#include <d3d10.h>
 #include <gl/GL.h>
 
 namespace Ale
@@ -11,7 +10,7 @@ namespace Ale
 	std::array<std::pair<HWND, WindowsWindow*>, 32> WindowsWindow::m_Windows;
 	int WindowsWindow::m_WindowCount = 0;
 
-	#define Sleep(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
+#define Sleep(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
 
 	WindowsWindow::WindowsWindow(Window::WindowProps* props)
 		: m_HInstance(GetModuleHandle(NULL)), m_Props(props)
@@ -57,19 +56,9 @@ namespace Ale
 		UpdateWindow(m_Hwnd);
 	}
 
-	bool WindowsWindow::MakeContextCurrent(RenderingAPI api)
+	bool WindowsWindow::MakeContextCurrent()
 	{
-		m_RenderingAPI = api;
-
-		switch (api)
-		{
-			case OPENGL: return MakeOpenGLContext();
-			case DIRECTX: return MakeDirectXContext();
-			default:
-				std::cout << "[ AleWindow ] ( ERROR ) -> Cannot recognize api \"" << api << "\"!" << std::endl;
-				return false;
-		}
-
+		return MakeOpenGLContext();
 	}
 
 	bool WindowsWindow::MakeOpenGLContext()
@@ -115,54 +104,6 @@ namespace Ale
 		return true;
 	}
 
-	bool WindowsWindow::MakeDirectXContext()
-	{
-		m_DxProps = new DxProps;
-
-		DXGI_SWAP_CHAIN_DESC swapChainDesc;
-
-		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
-		swapChainDesc.BufferCount = 2; // Double buffer
-		swapChainDesc.BufferDesc.Width = m_Props->Width;
-		swapChainDesc.BufferDesc.Height = m_Props->Height;
-		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-		swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-		swapChainDesc.SampleDesc.Quality = 0;
-		swapChainDesc.SampleDesc.Count = 1;
-		swapChainDesc.OutputWindow = m_Hwnd;
-		swapChainDesc.Windowed = true;
-
-		IDXGISwapChain* swapChain;
-		ID3D10Device* d3dDevice;
-		D3D10CreateDeviceAndSwapChain(NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL, 0, D3D10_SDK_VERSION, &swapChainDesc, &swapChain, &d3dDevice);
-
-		ID3D10Texture2D* backBuffer;
-		ID3D10RenderTargetView* renderTargetView;
-		swapChain->GetBuffer(0, __uuidof(ID3D10Texture2D), (LPVOID*)&backBuffer);
-		d3dDevice->CreateRenderTargetView(backBuffer, NULL, &renderTargetView);
-		backBuffer->Release();
-		d3dDevice->OMSetRenderTargets(1, &renderTargetView, NULL);
-
-		D3D10_VIEWPORT viewport;
-		viewport.Width = m_Props->Width;
-		viewport.Height = m_Props->Height;
-		viewport.MinDepth = 0.0f;
-		viewport.MaxDepth = 1.0f;
-		viewport.TopLeftX = 0;
-		viewport.TopLeftY = 0;
-		d3dDevice->RSSetViewports(1, &viewport);
-
-		m_DxProps->SwapChainDesc = &swapChainDesc;
-		m_DxProps->SwapChain = swapChain;
-		m_DxProps->D3dDevice = d3dDevice;
-		m_DxProps->RenderTargetView = renderTargetView;
-		m_DxProps->Viewport = &viewport;
-
-		return true;
-	}
-
 	void WindowsWindow::PollEvents()
 	{
 		MSG msg;
@@ -176,49 +117,19 @@ namespace Ale
 		Sleep(m_SleepMargin);
 	}
 
-	void WindowsWindow::SwpBuffers()
+	void WindowsWindow::SwapBuffers()
 	{
-		switch (m_RenderingAPI)
-		{
-			case OPENGL: SwapOpenGLBuffers(); break;
-			case DIRECTX: SwapDirectXBuffers(); break;
-		}
+		SwapOpenGLBuffers();
 	}
 
 	void WindowsWindow::SwapOpenGLBuffers()
 	{
-		SwapBuffers(GetDC(m_Hwnd));
-
-	}
-
-	void WindowsWindow::SwapDirectXBuffers()
-	{
-		m_DxProps->SwapChain->Present(0, 0);
+		::SwapBuffers(GetDC(m_Hwnd));
 	}
 
 	void WindowsWindow::UpdateViewport()
 	{
 
-	}
-
-	void WindowsWindow::SetKeyCallback(const std::function<void(int, int)>& callback)
-	{
-		m_KeyCallback = new std::function<void(int, int)>(callback);
-	}
-
-	void WindowsWindow::SetMouseMoveCallback(const std::function<void(int, int)>& callback)
-	{
-		m_MouseMoveCallback = new std::function<void(int, int)>(callback);
-	}
-
-	void WindowsWindow::SetMouseScrollCallback(const std::function<void(int)>& callback)
-	{
-		m_MouseScrollCallback = new std::function<void(int)>(callback);
-	}
-
-	void WindowsWindow::SetWindowSizeCallback(const std::function<void(int, int, int, int)>& callback)
-	{
-		m_WindowSizeCallback = new std::function<void(int, int, int, int)>(callback);
 	}
 
 	WindowsWindow* WindowsWindow::GetWindow(HWND hwnd)
@@ -233,30 +144,6 @@ namespace Ale
 		return nullptr;
 	}
 
-	void WindowsWindow::KeyEvent(int keycode, int action)
-	{
-		if (m_KeyCallback)
-			(*m_KeyCallback)(keycode, action);
-	}
-
-	void WindowsWindow::MouseMoveEvent(int x, int y)
-	{
-		if (m_MouseMoveCallback)
-			(*m_MouseMoveCallback)(x, y);
-	}
-
-	void WindowsWindow::MouseScrollEvent(int delta)
-	{
-		if (m_MouseScrollCallback)
-			(*m_MouseScrollCallback)(delta);
-	}
-
-	void WindowsWindow::WindowSizeEvent(int x, int y, int width, int height)
-	{
-		if (m_WindowSizeCallback)
-			(*m_WindowSizeCallback)(x, y, width, height);
-	}
-
 	LRESULT WindowsWindow::WndProc(HWND hwnd, unsigned int msg, WPARAM wParam, LPARAM lParam)
 	{
 		WindowsWindow* window = GetWindow(hwnd);
@@ -266,43 +153,8 @@ namespace Ale
 		case WM_CLOSE:
 			window->m_ShouldClose = true;
 			PostQuitMessage(0);
-		case WM_KEYDOWN:
-			window->KeyEvent((int)wParam, 0);
-			break;
-		case WM_KEYUP:
-			window->KeyEvent((int)wParam, 1);
-			break;
-		case WM_MOUSEMOVE:
-		{
-			int x = LOWORD(lParam);
-			int y = HIWORD(lParam);
-			window->MouseMoveEvent(x, y);
-			break;
 		}
-		case WM_MOVING:
-		case WM_SIZING:
-		{
-			RECT* rect = reinterpret_cast<RECT*>(lParam);
-
-			int x = rect->left;
-			int y = rect->top;
-
-			int width = rect->right - x;
-			int height = rect->bottom - y;
-
-			window->m_Props->Width = width;
-			window->m_Props->Height = height;
-			window->WindowSizeEvent(x, y, width, height);
-			break;
-		}
-		case WM_MOUSEWHEEL:
-		{
-			int delta = GET_WHEEL_DELTA_WPARAM(wParam);
-			window->MouseScrollEvent(delta);
-			break;
-		}
-		}
-
+		
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
 }
