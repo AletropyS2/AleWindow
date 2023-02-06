@@ -1,8 +1,14 @@
 # Directories
 .vscode/
 .vs/
+bin/
+bin-int/
 
 # Files
-c_cpp_properties.json
-.vsproj
+*.vsproj
+*.vcxproj
+*.filters
+*.user
+*.sln
+
 Makefile

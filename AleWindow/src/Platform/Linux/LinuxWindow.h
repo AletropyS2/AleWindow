@@ -5,7 +5,6 @@
 #ifdef __linux__
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
-#endif
 
 namespace Ale
 {
@@ -25,3 +24,5 @@ namespace Ale
     };
 
 }
+
+#endif

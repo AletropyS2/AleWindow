@@ -3,28 +3,28 @@
 #include "AleWindow/Window.h"
 
 #ifdef __linux__
-
     #include "Platform/Linux/LinuxWindow.h"
-
-#elif
-
+#elif _WIN64
     #include "Platform/Windows/WindowsWindow.h"
-
 #endif
 
 namespace Ale
 {
 
-    Window* CreateWindow(unsigned int width, unsigned int height, const char* title);
+    Window* CreateAleWindow(unsigned int width, unsigned int height, const char* title);
 
 #ifdef __linux__
 
-    Window* CreateWindow(unsigned int width, unsigned int height, const char* title)
+    Window* CreateAleWindow(unsigned int width, unsigned int height, const char* title)
     {
-        #include "Platform/Linux/LinuxWindow.h"
         return new LinuxWindow(width, height, title);
     }
 
+#elif _WIN64
+    Window* CreateAleWindow(unsigned int width, unsigned int height, const char* title)
+    {
+        return new WindowsWindow(width, height, title);
+    }
 #endif
 
 }

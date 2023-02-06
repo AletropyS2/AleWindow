@@ -1,5 +1,7 @@
 #include "LinuxWindow.h"
 
+#ifdef __linux__
+
 namespace Ale
 {
     LinuxWindow::LinuxWindow(unsigned int width, unsigned int height, const char* title)
@@ -48,3 +50,5 @@ namespace Ale
         XFlush(m_Display);
     }
 }
+
+#endif

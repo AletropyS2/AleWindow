@@ -4,7 +4,7 @@
 int main()
 {
 
-    Ale::Window* window = Ale::CreateWindow(800, 600, "Test");
+    Ale::Window* window = Ale::CreateAleWindow(800, 600, "Test");
 
     while(!window->ShouldClose())
     {
