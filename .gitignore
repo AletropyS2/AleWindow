@@ -1,0 +1,11 @@
+# Directories
+.vs/
+.vscode/
+bin/
+bin-int/
+
+#################################
+
+# Files
+
+Makefile
