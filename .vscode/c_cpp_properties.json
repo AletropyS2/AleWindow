@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/AleWindow/src/"
             ],
             "defines": [],
             "compilerPath": "/usr/sbin/gcc",

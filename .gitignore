@@ -1,0 +1,8 @@
+# Directories
+.vscode/
+.vs/
+
+# Files
+c_cpp_properties.json
+.vsproj
+Makefile
