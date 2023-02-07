@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AleWindow/Window.h"
+#include "AleWindow/Debug.h"
 
 #ifdef __linux__
     #include "Platform/Linux/LinuxWindow.h"
@@ -11,20 +12,16 @@
 namespace Ale
 {
 
-    Window* CreateAleWindow(unsigned int width, unsigned int height, const char* title);
-
-#ifdef __linux__
-
-    Window* CreateAleWindow(unsigned int width, unsigned int height, const char* title)
+    Window* CreateAleWindow(unsigned int width = 1280, unsigned int height = 720, const char* title = "AleWindow")
     {
+        #ifdef __linux__
         return new LinuxWindow(width, height, title);
-    }
-
-#elif _WIN64
-    Window* CreateAleWindow(unsigned int width, unsigned int height, const char* title)
-    {
+        #elif _WIN64
         return new WindowsWindow(width, height, title);
+        #else
+        ALE_ERROR("Platform not supported yet!");
+        return nullptr;
+        #endif
     }
-#endif
 
 }

@@ -1,4 +1,5 @@
 #include "WindowsWindow.h"
+#include "AleWindow/Debug.h"
 
 #ifdef _WIN64
 
@@ -67,6 +68,18 @@ namespace Ale
 	void WindowsWindow::SwapBuffers()
 	{
 	}
+
+	void WindowsWindow::SetKeyCallback(std::function<void(unsigned int, unsigned int)> callback)
+    {
+        m_KeyCallback = callback;
+        ALE_LOG("Setted KeyCallback to " << &callback);
+    }
+
+    void WindowsWindow::SetMouseButtonCallback(std::function<void(unsigned int, unsigned int)> callback)
+    {
+        m_MouseButtonCallback = callback;
+        ALE_LOG("Setted MouseButtonCallback to " << &callback);
+    }
 
 	LRESULT WindowsWindow::WndProc(HWND hwnd, unsigned int msg, WPARAM wParam, LPARAM lParam)
 	{

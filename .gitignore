@@ -4,11 +4,13 @@
 bin/
 bin-int/
 
-# Files
 *.vsproj
 *.vcxproj
 *.filters
 *.user
 *.sln
+*.a
+*.o
 
 Makefile
+.vscode/c_cpp_properties.json

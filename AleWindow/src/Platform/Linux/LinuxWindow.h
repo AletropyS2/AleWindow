@@ -17,6 +17,15 @@ namespace Ale
 
         virtual void PollEvents() override;
         virtual void SwapBuffers() override;
+
+        virtual void SetKeyCallback(std::function<void(unsigned int, unsigned int)> callback) override;
+        virtual void SetMouseButtonCallback(std::function<void(unsigned int, unsigned int)> callback) override;
+
+        virtual void MakeContextCurrent(RenderAPI api) override;
+
+    private:
+        void MakeOpenGLContext();
+
     private:
         Display* m_Display;
         ::Window m_Window;

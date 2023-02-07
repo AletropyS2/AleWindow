@@ -28,6 +28,13 @@ project "AleWindow"
         "%{prj.name}/src"
     }
 
+    
+    filter "system:linux"
+        links { "X11", "GL" }
+
+    filter "system:windows"
+        links { "opengl32.lib" }
+
     filter "configurations:Debug"
         defines
         {
@@ -68,7 +75,10 @@ project "Sandbox"
     }
 
     filter "system:linux"
-        links { "X11" }
+        links { "X11", "GL" }
+    
+    filter "system:windows"
+        links { "opengl32.lib" }
 
     filter "configurations:Debug"
         symbols "On"
