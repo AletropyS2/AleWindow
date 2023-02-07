@@ -20,6 +20,10 @@ namespace Ale
 
         virtual void SetKeyCallback(std::function<void(unsigned int, unsigned int)> callback) override;
         virtual void SetMouseButtonCallback(std::function<void(unsigned int, unsigned int)> callback) override;
+
+        virtual void MakeContextCurrent(RenderAPI api) override;
+
+        void MakeOpenGLContext();
     private:
         static LRESULT CALLBACK WndProc(HWND hwnd, unsigned int msg, WPARAM wParam, LPARAM lParam);
     private:

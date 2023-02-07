@@ -3,6 +3,8 @@
 
 #ifdef _WIN64
 
+#include <gl/GL.h>
+
 namespace Ale
 {
 	std::unordered_map<HWND, WindowsWindow*> WindowsWindow::m_Windows;
@@ -67,6 +69,7 @@ namespace Ale
 
 	void WindowsWindow::SwapBuffers()
 	{
+		::SwapBuffers(GetDC(m_Hwnd));
 	}
 
 	void WindowsWindow::SetKeyCallback(std::function<void(unsigned int, unsigned int)> callback)
@@ -80,6 +83,52 @@ namespace Ale
         m_MouseButtonCallback = callback;
         ALE_LOG("Setted MouseButtonCallback to " << &callback);
     }
+
+	void WindowsWindow::MakeContextCurrent(RenderAPI api)
+	{
+		switch (api)
+		{
+		case RenderAPI::NONE: ALE_ERROR("None isn't an renderer api"); break;
+		case RenderAPI::OPENGL: MakeOpenGLContext(); break;
+		case RenderAPI::VULKAN: ALE_ERROR("Vulkan is not supported yet!"); break;
+		case RenderAPI::DIRECTX: ALE_ERROR("DirectX is not supported yet!"); break;
+		}
+	}
+
+	void WindowsWindow::MakeOpenGLContext()
+	{
+		PIXELFORMATDESCRIPTOR pfd = {
+			sizeof(PIXELFORMATDESCRIPTOR),   // size of this pfd  
+			1,                     // version number  
+			PFD_DRAW_TO_WINDOW |   // support window  
+			PFD_SUPPORT_OPENGL |   // support OpenGL  
+			PFD_DOUBLEBUFFER,      // double buffered  
+			PFD_TYPE_RGBA,         // RGBA type  
+			24,                    // 24-bit color depth  
+			0, 0, 0, 0, 0, 0,      // color bits ignored  
+			0,                     // no alpha buffer  
+			0,                     // shift bit ignored  
+			0,                     // no accumulation buffer  
+			0, 0, 0, 0,            // accum bits ignored  
+			32,                    // 32-bit z-buffer  
+			0,                     // no stencil buffer  
+			0,                     // no auxiliary buffer  
+			PFD_MAIN_PLANE,        // main layer  
+			0,                     // reserved  
+			0, 0, 0                // layer masks ignored  
+		};
+		HDC hdc = GetDC(m_Hwnd);
+		
+		int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+		SetPixelFormat(hdc, pixelFormat, &pfd);
+
+		HGLRC ctx = wglCreateContext(hdc);
+
+		if (!wglMakeCurrent(hdc, ctx))
+		{
+			ALE_ERROR("Cannot make opengl current context!");
+		}
+	}
 
 	LRESULT WindowsWindow::WndProc(HWND hwnd, unsigned int msg, WPARAM wParam, LPARAM lParam)
 	{

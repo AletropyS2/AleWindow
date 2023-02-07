@@ -12,7 +12,7 @@ namespace Ale
     {
         NONE = -1,
         OPENGL,
-        VUKAN,
+        VULKAN,
         DIRECTX
     };
 

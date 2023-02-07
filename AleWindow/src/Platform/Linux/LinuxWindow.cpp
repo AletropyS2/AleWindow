@@ -108,10 +108,10 @@ namespace Ale
     {
         switch(api)
         {
-            case RenderAPI::NONE: ALE_ERROR("None isn't an renderer api");
-            case RenderAPI::OPENGL: MakeOpenGLContext();
-            case RenderAPI::VUKAN: ALE_ERROR("Vulkan is not supported yet!");
-            case RenderAPI::DIRECTX: ALE_ERROR("DirectX is not supported in Linux!");
+            case RenderAPI::NONE: ALE_ERROR("None isn't an renderer api"); break;
+            case RenderAPI::OPENGL: MakeOpenGLContext(); break;
+            case RenderAPI::VULKAN: ALE_ERROR("Vulkan is not supported yet!"); break;
+            case RenderAPI::DIRECTX: ALE_ERROR("DirectX is not supported in Linux!"); break;
         }
     }
 
