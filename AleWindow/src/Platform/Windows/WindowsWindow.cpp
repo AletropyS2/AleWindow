@@ -72,18 +72,6 @@ namespace Ale
 		::SwapBuffers(GetDC(m_Hwnd));
 	}
 
-	void WindowsWindow::SetKeyCallback(std::function<void(unsigned int, unsigned int)> callback)
-    {
-        m_KeyCallback = callback;
-        ALE_LOG("Setted KeyCallback to " << &callback);
-    }
-
-    void WindowsWindow::SetMouseButtonCallback(std::function<void(unsigned int, unsigned int)> callback)
-    {
-        m_MouseButtonCallback = callback;
-        ALE_LOG("Setted MouseButtonCallback to " << &callback);
-    }
-
 	void WindowsWindow::MakeContextCurrent(RenderAPI api)
 	{
 		switch (api)
@@ -137,9 +125,86 @@ namespace Ale
 		switch (msg)
 		{
 		case WM_CLOSE:
+		{
 			window->m_ShouldClose = true;
 			PostQuitMessage(0);
 			break;
+		}
+		case WM_KEYDOWN:
+		{
+			EventSource e{};
+			e.keycode = (int)wParam;
+			e.action = ALE_PRESS;
+			window->CallCallback(EventType::KeyEvent, e);
+			break;
+		}
+		case WM_KEYUP:
+		{
+			EventSource e{};
+			e.keycode = (int)wParam;
+			e.action = ALE_RELEASE;
+			window->CallCallback(EventType::KeyEvent, e);
+			break;
+		}
+		case WM_MOUSEWHEEL:
+		{
+			EventSource e{};
+			e.delta = ((int)GET_WHEEL_DELTA_WPARAM(wParam)) / 120.0f;
+			window->CallCallback(EventType::MouseScroll, e);
+			break;
+		}
+		case WM_MOUSEMOVE:
+		{
+			EventSource e{};
+			e.x = LOWORD(lParam);
+			e.y = HIWORD(lParam);
+			window->CallCallback(EventType::MouseMove, e);
+			break;
+		}
+		case WM_LBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		{
+			EventSource e{};
+			e.action = ALE_PRESS;
+			e.button = msg == WM_LBUTTONDOWN ? 0 : msg == WM_MBUTTONDOWN ? 1 : 2;
+			window->CallCallback(EventType::MouseButton, e);
+			break;
+		}
+		case WM_LBUTTONUP:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONUP:
+		{
+			EventSource e{};
+			e.action = ALE_RELEASE;
+			e.button = msg == WM_LBUTTONUP ? 0 : msg == WM_MBUTTONUP ? 1 : 2;
+			window->CallCallback(EventType::MouseButton, e);
+			break;
+		}
+		case WM_SETFOCUS:
+		{
+			window->CallCallback(EventType::WindowSetFocus, EventSource());
+			break;
+		}
+		case WM_KILLFOCUS:
+		{
+			window->CallCallback(EventType::WindowSetFocus, EventSource());
+			break;
+		}
+		case WM_SIZING:
+		case WM_MOVING:
+		{
+			EventSource e{};
+
+			RECT rect = *(RECT*)lParam;
+
+			e.x = (float)rect.left;
+			e.y = (float)rect.top;
+			e.width = (float)rect.right - (float)rect.left;
+			e.height = (float)rect.bottom - (float)rect.top;
+			window->CallCallback(EventType::WindowResize, e);
+			break;
+		}
 		}
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}

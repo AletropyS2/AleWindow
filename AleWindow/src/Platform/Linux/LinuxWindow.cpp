@@ -58,30 +58,6 @@ namespace Ale
                     m_ShouldClose = true;
                 break;
             }
-            case KeyPress:
-            {
-                if(m_KeyCallback)
-                    m_KeyCallback(ALE_PRESS, event.xkey.keycode);
-                break;
-            }
-            case KeyRelease:
-            {
-                if(m_KeyCallback)
-                    m_KeyCallback(ALE_RELEASE, event.xkey.keycode);
-                break;
-            }
-            case ButtonPress:
-            {
-                if(m_MouseButtonCallback)
-                    m_MouseButtonCallback(ALE_PRESS, event.xbutton.button);
-                break;
-            }
-            case ButtonRelease:
-            {
-                if(m_MouseButtonCallback)
-                    m_MouseButtonCallback(ALE_RELEASE, event.xbutton.button);
-                break;
-            }
         }
     }
 
@@ -90,18 +66,6 @@ namespace Ale
         #ifdef ALE_OPENGL
         glXSwapBuffers(m_Display, m_Window);
         #endif
-    }
-
-    void LinuxWindow::SetKeyCallback(std::function<void(unsigned int, unsigned int)> callback)
-    {
-        m_KeyCallback = callback;
-        ALE_LOG("Setted KeyCallback to " << &callback);
-    }
-
-    void LinuxWindow::SetMouseButtonCallback(std::function<void(unsigned int, unsigned int)> callback)
-    {
-        m_MouseButtonCallback = callback;
-        ALE_LOG("Setted MouseButtonCallback to " << &callback);
     }
 
     void LinuxWindow::MakeContextCurrent(RenderAPI api)
