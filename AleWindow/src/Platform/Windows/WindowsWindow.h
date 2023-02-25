@@ -9,7 +9,7 @@
 
 namespace Ale
 {
-    class WindowsWindow : public Window
+    class ALE_API WindowsWindow : public Window
     {
     public:
         WindowsWindow(unsigned int width, unsigned int height, const char* title);

@@ -12,7 +12,7 @@
 namespace Ale
 {
 
-    Window* CreateAleWindow(unsigned int width = 1280, unsigned int height = 720, const char* title = "AleWindow")
+    Window* ALE_API CreateAleWindow(unsigned int width = 1280, unsigned int height = 720, const char* title = "AleWindow")
     {
         #ifdef __linux__
         return new LinuxWindow(width, height, title);

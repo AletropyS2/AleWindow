@@ -1,3 +1,5 @@
+require "lib"
+
 workspace "AleWindow"
     architecture "x64"
     startproject "Sandbox"

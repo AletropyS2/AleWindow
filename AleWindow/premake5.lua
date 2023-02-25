@@ -17,6 +17,13 @@ project "AleWindow"
     }
 
     
+    filter "options:lib=shared"
+        kind "SharedLib"
+        defines
+        {
+            "ALE_BUILD_DLL"
+        }
+
     filter "system:linux"
         links { "X11", "GL" }
 
